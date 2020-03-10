@@ -14,24 +14,24 @@ exports.addCustomer = (req, res) => {
     db.User.create({
         email: req.body.emailId,
         password: req.body.password
-    }, (error, user) => {
-        if (error) {
-            console.log(error)
-            res.send(error)
-        }
-        db.Customer.create({
-            name: req.body.name,
-            address: req.body.address,
-            phoneNo: req.body.phoneNumber,
-            userId: user,
-        }, (error, customer) => {
-            if (error) {
-                console.log(error)
-                res.send(error)
-            }
-            else {
-                res.send("New customer added")
-            }
-        })
-    })
+    }).then(user => {
+        db.ShoppingCart.create({
+            price: 0
+        }).then(cart => {
+            db.WishList.create({
+                justHolder: 0
+            }).then(wishlist => {
+                db.Customer.create({
+                    name: req.body.name,
+                    address: req.body.address,
+                    phoneNo: req.body.phoneNumber,
+                    userId: user,
+                    shoppingCart: cart,
+                    wishList: wishlist
+                }).then(customer => {
+                    res.send({ "Success": customer })
+                }).catch(error => res.send({ "ERROR": error }))
+            }).catch(error => res.send({ "ERROR": error }))
+        }).catch(error => res.send({ "ERROR": error }))
+    }).catch(error => res.send({ "ERROR": error }))
 }

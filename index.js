@@ -15,11 +15,13 @@ const customerRouter = require('./routes/customer')
 const categoryRouter = require('./routes/category')
 const subCategoryRouter = require('./routes/subCategory')
 const productRouter = require('./routes/product')
+const wishListRouter = require('./routes/wishList')
 
 app.use('/api/customer/', customerRouter)
 app.use('/api/category/', categoryRouter)
 app.use('/api/subCategory/', subCategoryRouter)
 app.use('/api/product/', productRouter)
+app.use('/api/wishlist/', wishListRouter)
 
 app.listen(PORT, ()=>{
     console.log("Server running on port", PORT)
