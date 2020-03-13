@@ -29,6 +29,17 @@ describe('User', () => {
     })
 })
 
+describe("Product", () => {
+    describe('/POST Products', ()=>{
+        it('should insert all products', done=>{
+            chai.request(app)
+            .post('/api/product/add')
+            .send({
+                
+            })
+        })
+    })
+})
 
 
 
