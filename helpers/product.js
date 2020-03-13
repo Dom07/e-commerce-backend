@@ -42,7 +42,7 @@ exports.deleteProduct = (req, res) =>{
 }
 
 exports.allProduct = (req, res) => {
-    db.Product.find({})
+    db.Product.find({}).populate('category').populate('subCategory')
     .then(products => {
         res.send({"SUCCESS": products})
     })
