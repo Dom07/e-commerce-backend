@@ -51,3 +51,23 @@ exports.allProduct = (req, res) => {
         console.log(error)
     })
 }
+
+exports.getProductById = (req, res) => {
+    db.Product.findOne({_id: req.params.id})
+        .then(product => {
+            res.send({"SUCCESS": product})
+        })
+        .catch(error => {
+            res.send({"ERROR": "FAILED TO GET PRODUCT"})
+        })
+}
+
+exports.getFeaturedProduct = (req,res) => {
+    db.Category.findOne({name: req.params.category})
+    .then(category => {
+        db.Product.find({category: category._id})
+        .then(products => res.send({"SUCCESS": products}))
+        .catch(error => console.log({"ERROR": error}))
+    })
+    .catch(error => console.log({"ERROR": error}))
+}
