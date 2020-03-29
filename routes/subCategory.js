@@ -5,5 +5,6 @@ const router = express.Router()
 
 router.post('/add', helpers.addSubCategory)
 router.delete('/delete', helpers.deleteSubCategory)
+router.get('/:category', helpers.getSubCategories)
 
 module.exports = router

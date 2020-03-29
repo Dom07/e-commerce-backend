@@ -12,6 +12,7 @@ exports.addProduct = (req, res) => {
                         quantity: req.body.quantity,
                         category: foundCat,
                         subCategory: foundSubCat,
+                        ratings: 0
                     })
                     .then(newProduct => {
                         req.body.url.forEach(item => {

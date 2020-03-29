@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 // Db connection 
-mongoose.connect("mongodb://dom:njit1234@ds125862.mlab.com:25862/heroku_b7vm75fw", 
+mongoose.connect("mongodb://localhost:27017/eCommerce", 
     {
         useNewUrlParser: true, 
         useUnifiedTopology: true
