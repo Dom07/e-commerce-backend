@@ -72,3 +72,9 @@ exports.getFeaturedProduct = (req,res) => {
     })
     .catch(error => console.log({"ERROR": error}))
 }
+
+exports.getProductBySubCategory = (req, res) => {
+    db.Product.find({subCategory: req.params.id})
+    .then(products => res.send({"SUCCESS": products}))
+    .catch(error => res.send({"ERROR": error}))
+}

@@ -38,7 +38,7 @@ exports.addToCart = (req, res) => {
                 .then(shoppingCart => {
                     product = {
                         productId: req.body.product_id,
-                        quantity: req.body.quantity,
+                        quantity: 1,
                         dateAdded: new Date()
                     }
                     shoppingCart.products.push(product)

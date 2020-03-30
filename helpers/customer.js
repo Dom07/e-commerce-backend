@@ -5,9 +5,9 @@ exports.getCustomer = (req, res) => {
         .then(user => {
             db.Customer.findOne({ userId: user._id })
                 .then(customer => {
-                    res.send(customer)
-                }).catch(error => console.log(error))
-        }).catch(error => console.log(error))
+                    res.send({"SUCCESS":customer})
+                }).catch(error => res.send({"ERROR": 404}))
+        }).catch(error => res.send({"ERROR": 404}))
 }
 
 exports.addCustomer = (req, res) => {
