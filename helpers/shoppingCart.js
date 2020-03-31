@@ -1,10 +1,19 @@
 const db = require('../models')
-const mongoose = require('mongoose')
 
 exports.viewCart = (req, res) => {
-    db.Customer.findOne({ _id: req.body.customer_id }, 'shoppingCart').populate('shoppingCart')
+    db.Customer.findOne({ _id: req.params.customer_id }, 'shoppingCart')
+        .populate([
+            {
+                path: "shoppingCart",
+                model: "ShoppingCart",
+                populate: {
+                    path: "products.productId",
+                    select: "image price name quantity"
+                }
+            }
+        ])
         .then(shoppingCart => {
-            res.send(shoppingCart)
+            res.send({ "SUCCESS": shoppingCart })
         })
         .catch(error => res.send("ERROR"))
 }
@@ -18,15 +27,34 @@ exports.updateCart = (req, res) => {
                     cart.products[index]["quantity"] = req.body.quantity
                     cart.products[index]["dateAdded"] = new Date()
                     cart.save()
-                    .then(cart => res.send({"SUCCESS": cart}))
-                    .catch(error => {
-                        res.send({ "ERROR": "Failed to update cart" })
-                        console.log(error)
-                    })
+                        .then(cart => res.send({ "SUCCESS": cart }))
+                        .catch(error => {
+                            res.send({ "ERROR": "Failed to update cart" })
+                            console.log(error)
+                        })
                 })
                 .catch(error => {
                     res.send({ "ERROR": "Failed to update cart" })
                     console.log(error)
+                })
+        })
+}
+
+exports.removeItemFromCart = (req, res) => {
+    db.Customer.findOne({ _id: req.body.customer_id }, 'shoppingCart')
+        .then(response => {
+            db.ShoppingCart.findOne({ _id: response.shoppingCart })
+                .then(cart => {
+                    const index = cart.products.findIndex(item => {
+                        console.log(item.productId)
+                        return item.productId == req.body.productId
+                    })
+                    console.log(index)
+                    if(index!=-1) cart.products.splice(index, 1)
+                    cart.save()
+                        .then(cart => res.send({"SUCCESS": cart.products}))
+                        .catch(error => res.send(error))
+                    // index = cart.products.findIndex(item => item.productId == req.body.productId)
                 })
         })
 }
@@ -48,4 +76,14 @@ exports.addToCart = (req, res) => {
                         .catch(error => res.send({ "ERROR": error }))
                 })
         })
+}
+
+exports.clearCart = (cartId) =>{
+    db.ShoppingCart.findOne({_id: cartId})
+    .then(cart => {
+        cart.products = []
+        cart.save()
+        .then(cart => true)
+        .catch(error => error)
+    })
 }

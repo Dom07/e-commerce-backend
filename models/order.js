@@ -10,7 +10,13 @@ const OrderSchema = new mongoose.Schema({
         }
     ],
     shippingAddress: String,
-    price: Number
+    totalPrice: Number,
+    paymentDetails: {
+        cardHolderName: String,
+        cardNumber: Number,
+        expiryDate: Date,
+        CVV: Number
+    }
 })
 
 module.exports = mongoose.model("Order", OrderSchema)

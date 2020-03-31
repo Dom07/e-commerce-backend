@@ -29,7 +29,7 @@ exports.addCustomer = (req, res) => {
                     shoppingCart: cart,
                     wishList: wishlist
                 }).then(customer => {
-                    res.send({ "Success": customer })
+                    res.send({ "SUCCESS": customer })
                 }).catch(error => res.send({ "ERROR": error }))
             }).catch(error => res.send({ "ERROR": error }))
         }).catch(error => res.send({ "ERROR": error }))
