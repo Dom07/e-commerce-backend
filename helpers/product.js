@@ -55,6 +55,14 @@ exports.allProduct = (req, res) => {
 
 exports.getProductById = (req, res) => {
     db.Product.findOne({_id: req.params.id})
+    .populate({
+        path:"review",
+        populate:{
+            path: "customerId",
+            model: "Customer",
+            select: "name"
+        }
+    })
         .then(product => {
             res.send({"SUCCESS": product})
         })

@@ -25,6 +25,7 @@ const productRouter = require('./routes/product')
 const wishListRouter = require('./routes/wishList')
 const shoppingCart = require('./routes/shoppingCart')
 const order = require('./routes/order')
+const review = require('./routes/review')
 
 app.use('/api/customer/', customerRouter)
 app.use('/api/category/', categoryRouter)
@@ -33,6 +34,7 @@ app.use('/api/product/', productRouter)
 app.use('/api/wishlist/', wishListRouter)
 app.use('/api/shoppingCart', shoppingCart)
 app.use('/api/order', order)
+app.use('/api/review', review)
 
 app.listen(PORT, ()=>{
     console.log("Server running on port", PORT)

@@ -15,23 +15,40 @@ exports.placeOrder = (req, res) => {
             CVV: req.body.CVV
         }
     })
-        .then(order => {
-            req.body.products.forEach(item => {
-                order.product.push(item)
-            })
-            order.save()
-                .then(order => {
-                    helpers.clearCart(req.body.shoppingCartId)
-                    res.send({ "SUCCESS": true })
-                })
-                .catch(error => res.send(error))
+    .then(order => {
+        req.body.products.forEach(item => {
+            order.product.push(item)
         })
-        .catch(error => res.send(error))
+        order.save()
+            .then(order => {
+                console.log(order)
+                helpers.clearCart(req.body.shoppingCartId)
+                db.Customer.findOne({ _id: req.body.customer_id }, "order")
+                    .then(customer => {
+                        console.log(customer)
+                        customer.order.push(order)
+                        customer.save()
+                            .then(customer => res.send({ "SUCCESS": customer }))
+                            .catch(error => console.log(error))
+                    })
+                    .catch(error => console.log(error))
+            })
+            .catch(error => console.log(error))
+    })
+    .catch(error => res.send(error))
 }
 
 exports.getOrders = (req, res) => {
-    db.Customer.findOne({_id: req.body.customerId}, "order")
-    .then(order => {
-        // Complete this
-    })
+    db.Customer.findOne({ _id: req.params.customerId }, "order")
+        .populate({
+            path: "order",
+            select: "orderDate status totalPrice product",
+            populate:{
+                path: "product.productId",
+                select: "name image price"
+            }
+        })
+        .then(order => {
+            res.send({"SUCCESS": order})
+        })
 }
