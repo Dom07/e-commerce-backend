@@ -6,7 +6,7 @@ mongoose.connect("mongodb://localhost:27017/eCommerce",
         useNewUrlParser: true, 
         useUnifiedTopology: true
     }, 
-    error=> console.log(error));
+    error => error ? console.log(error): null);
 
 // All model exports
 module.exports.Admin = require('./admin');
