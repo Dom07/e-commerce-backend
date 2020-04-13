@@ -1,6 +1,7 @@
 var db = require('../models')
 const helpers = require('../helpers/shoppingCart')
 
+// Implement logic to reduce item count in db
 exports.placeOrder = (req, res) => {
     db.Order.create({
         orderDate: Date.now(),

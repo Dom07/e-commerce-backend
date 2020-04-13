@@ -54,7 +54,6 @@ exports.removeItemFromCart = (req, res) => {
                     cart.save()
                         .then(cart => res.send({"SUCCESS": cart.products}))
                         .catch(error => res.send(error))
-                    // index = cart.products.findIndex(item => item.productId == req.body.productId)
                 })
         })
 }
