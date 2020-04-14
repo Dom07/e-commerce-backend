@@ -93,3 +93,26 @@ exports.getProductBySubCategory = (req, res) => {
         .then(products => res.send({ "SUCCESS": products }))
         .catch(error => res.send({ "ERROR": error }))
 }
+
+exports.getProductCountAndReduce = (count, id, callback) => {
+    db.Product.findOne({_id: id})
+    .then(product => {
+        if(product.quantity > count){
+            product.quantity = product.quantity - count
+            product.save()
+            .then(() => callback(true))
+            .catch(() => callback(false))
+        }else{
+            callback(false)
+        }
+    })
+    .catch(error => console.log(error))
+}
+
+exports.reduceItemQuant = (count, id) => {
+    db.Product.findOne({_id: id})
+    .then(product => {
+
+    })
+    .catch()
+}

@@ -1,4 +1,5 @@
 var db = require('../models')
+const productHelper = require('../helpers/product')
 const helpers = require('../helpers/shoppingCart')
 
 // Implement logic to reduce item count in db
@@ -16,27 +17,31 @@ exports.placeOrder = (req, res) => {
             CVV: req.body.CVV
         }
     })
-    .then(order => {
-        req.body.products.forEach(item => {
-            order.product.push(item)
-        })
-        order.save()
-            .then(order => {
-                console.log(order)
-                helpers.clearCart(req.body.shoppingCartId)
-                db.Customer.findOne({ _id: req.body.customer_id }, "order")
-                    .then(customer => {
-                        console.log(customer)
-                        customer.order.push(order)
-                        customer.save()
-                            .then(customer => res.send({ "SUCCESS": customer }))
+        .then(order => {
+            req.body.products.forEach(item => {
+                productHelper.getProductCountAndReduce(item.quantity, item.productId._id, (result) => {
+                    if (result) {
+                        order.product.push(item)
+                        order.save()
+                            .then(order => {
+                                helpers.clearCart(req.body.shoppingCartId)
+                                db.Customer.findOne({ _id: req.body.customer_id }, "order")
+                                    .then(customer => {
+                                        customer.order.push(order)
+                                        customer.save()
+                                            .then(customer => res.send({ "SUCCESS": customer }))
+                                            .catch(error => console.log(error))
+                                    })
+                                    .catch(error => console.log(error))
+                            })
                             .catch(error => console.log(error))
-                    })
-                    .catch(error => console.log(error))
+                    }else{
+                        res.send({"FAILED": "Item not available"})
+                    }
+                })
             })
-            .catch(error => console.log(error))
-    })
-    .catch(error => res.send(error))
+        })
+        .catch(error => res.send(error))
 }
 
 exports.getOrders = (req, res) => {
@@ -44,12 +49,12 @@ exports.getOrders = (req, res) => {
         .populate({
             path: "order",
             select: "orderDate status totalPrice product",
-            populate:{
+            populate: {
                 path: "product.productId",
                 select: "name image price"
             }
         })
         .then(order => {
-            res.send({"SUCCESS": order})
+            res.send({ "SUCCESS": order })
         })
 }

@@ -21,6 +21,7 @@ exports.viewCart = (req, res) => {
 exports.updateCart = (req, res) => {
     db.Customer.findOne({ _id: req.body.customer_id }, 'shoppingCart').populate('shoppingCart')
         .then(customer => {
+            console.log(customer)
             db.ShoppingCart.findOne({ _id: customer.shoppingCart })
                 .then(cart => {
                     index = cart.products.findIndex(item => (item.productId == req.body.product_id))
