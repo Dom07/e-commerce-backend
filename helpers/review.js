@@ -12,9 +12,13 @@ exports.addReview = (req, res) => {
         .then(review => {
             db.Product.findOne({_id: req.body.product_id})
             .then(product => {
+                const oldRatings = product.ratings
+                const oldTotalRatings = product.review.length
+                product.ratings = ((oldRatings * oldTotalRatings) + req.body.rating) / (oldTotalRatings + 1)
                 product.review.push(review)
                 product.save()
-                .then(product => res.send({"SUCCESS": true}))
+                .then(() => res.send({"SUCCESS": true}))
+                .catch(error => console.log(error))
             })
         })
     })

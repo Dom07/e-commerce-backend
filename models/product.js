@@ -9,7 +9,7 @@ const ProductSchema = new mongoose.Schema({
     category: {
         type: mongoose.Schema.Types.ObjectId, ref: "Category"
     },
-    quantity: {type: Number, required: true, min: 1},
+    quantity: {type: Number, required: true, min: 0},
     subCategory: {
         type: mongoose.Schema.Types.ObjectId, ref: "SubCategory"
     },
