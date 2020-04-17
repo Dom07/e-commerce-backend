@@ -7,6 +7,15 @@ exports.addCategory = (req, res) =>{
     .catch(error => console.log(error))
 }
 
+exports.getCategories = (req, res) =>{
+    db.Category.find({})
+        .then(categories => res.send({"SUCCESS": categories}))
+        .catch(error => {
+            console.log(error)
+            res.send({"ERROR": true})
+        })
+}
+
 exports.deleteCategory = (req, res) => {
     db.Category.findOneAndRemove({_id: req.body.id})
     .then(() => res.send({"SUCCESS": "Category Deleted"}))

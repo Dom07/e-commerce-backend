@@ -12,7 +12,16 @@ exports.addSubCategory = (req, res) => {
         .catch(error => console.log(error))
 }
 
-exports.getSubCategories = (req, res) => {
+exports.getSubCategories = (req, res) =>{
+    db.SubCategory.find({})
+        .then(subCategories => res.send({"SUCCESS": subCategories}))
+        .catch(error => {
+            console.log(error)
+            res.send({"ERROR": true})
+        })
+}
+
+exports.getSubCategoryByName = (req, res) => {
     db.Category.findOne({name: req.params.category})
     .then(category => {
         db.SubCategory.find({parentCategory: category._id})

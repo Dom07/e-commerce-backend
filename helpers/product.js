@@ -99,6 +99,7 @@ exports.getProductCountAndReduce = (count, id, callback) => {
     .then(product => {
         if(product.quantity > count){
             product.quantity = product.quantity - count
+            // TODO : parallel save is a problem need to use find & modify to update
             product.save()
             .then(() => callback(true))
             .catch(() => callback(false))

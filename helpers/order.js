@@ -21,6 +21,7 @@ exports.placeOrder = (req, res) => {
                 productHelper.getProductCountAndReduce(item.quantity, item.productId._id, (result) => {
                     if (result) {
                         order.product.push(item)
+                        // TODO : parallel save is a problem need to use find & modify to update
                         order.save()
                             .then(order => {
                                 helpers.clearCart(req.body.shoppingCartId)
