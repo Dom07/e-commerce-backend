@@ -5,11 +5,11 @@ const models = require('../../models/index')
 const should = chai.should()
 
 chai.use(chaiHttp)
-const categories = ["Electronics", "HealthCare", "Clothing", "Entertainment"]
+const categories = ["Electronics", "Clothing", "Entertainment"]
 
 describe("Product", () => {
     beforeEach((done) => {
-        models.Product.remove({ name: "Test Laptop" }, err => {
+        models.Product.deleteOne({ name: "Test Laptop" }, err => {
             done();
         })
     })
@@ -23,7 +23,7 @@ describe("Product", () => {
                         res.should.have.status(200)
                         res.body.should.have.property("SUCCESS")
                         res.body.SUCCESS.should.be.a("array")
-                        // res.body.SUCCESS.length.should.eql(5)
+                        res.body.SUCCESS.length.should.eql(5)
                         done();
                     })
             });
@@ -31,9 +31,21 @@ describe("Product", () => {
     });
 
     describe("GET /api/product/:id", () => {
-        it("it should return an object that describes the product", (done) => {
+        it("it should return an error saying product not found", (done) => {
             chai.request(app)
                 .get("/api/product/5e7fecd7e83f80ed49493109")
+                .end((err, res) => {
+                    res.should.have.status(200)
+                    res.body.should.have.property("ERROR")
+                    done();
+                })
+        })
+    })
+
+    describe("GET /api/product/:id", () => {
+        it("it should return a product with the given product id", (done) => {
+            chai.request(app)
+                .get("/api/product/5e9d55c9011fd2ccb459ae22")
                 .end((err, res) => {
                     res.should.have.status(200)
                     res.body.should.have.property("SUCCESS")
@@ -47,6 +59,7 @@ describe("Product", () => {
                 })
         })
     })
+
 
     describe("GET /api/product/getProductBySubCategory/:id", () => {
         it("it should return a list of products based on subCategory Id", (done) => {
@@ -79,6 +92,19 @@ describe("Product", () => {
                     res.should.have.status(200)
                     res.body.should.be.a('object')
                     res.body.should.have.property('SUCCESS')
+                    done();
+                })
+        })
+    })
+
+    describe("GET /api/product/getProductBySubCategory/:id", () => {
+        it("it should return all products belonging to a sub category", done => {
+            chai.request(app)
+                .get("/api/product/getProductBySubCategory/5e7fdf196fb4f9a851167703")
+                .end((err, res) => {
+                    res.should.have.status(200)
+                    res.body.should.have.property("SUCCESS")
+                    res.body.SUCCESS.should.be.a('array')
                     done();
                 })
         })
