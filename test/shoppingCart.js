@@ -41,6 +41,9 @@ describe("Shopping Cart", () => {
             .end((err, res) => {
                 res.should.have.status(200)
                 res.body.should.have.property("SUCCESS")
+                res.body.SUCCESS.should.be.a("object")
+                res.body.SUCCESS.should.have.property("shoppingCart")
+                res.body.SUCCESS.shoppingCart.products.should.be.a("array")
                 done();
             })
         })
