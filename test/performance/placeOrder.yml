@@ -1,0 +1,52 @@
+config:
+  target: 'http://localhost:4000'
+  phases:
+  - duration: 5
+    arrivalRate: 20
+  payload:
+    -
+      path: "user.csv"
+      fields:
+        - "customer_id"
+        - "shoppingCartId"
+    -
+      path: "products.csv"
+      fields:
+        - "product_id"
+    
+  variables:
+    shippingAddress:
+      - "1 East Street"
+    totalPrice:
+      - "500"
+    cardHolderName:
+      - "Tom Hanks"
+    cardNumber:
+      - "29012300003491"
+    expiryDate:
+      - "2023-01-01"
+    CVV:
+      - "123"
+
+scenarios:
+  - name: "Place Order for multiple users"
+    flow:
+      - post:
+          url: "/api/order/placeOrder"
+          json:
+            shippingAddress: "{{ shippingAddress }}"
+            totalPrice: "{{ totalPrice }}"
+            cardHolderName: "{{ cardHolderName }}"
+            cardNumber: "{{ cardNumber }}"
+            expiryDate: "{{ expiryDate }}"
+            CVV: "{{ CVV }}"
+            products: [
+                {
+                  productId: {
+                    _id: "{{ product_id }}"
+                  },
+                  quantity: 1
+                }
+            ]
+            customer_id: "{{ customer_id }}"
+            shoppingCartId: "{{ shoppingCartId }}"

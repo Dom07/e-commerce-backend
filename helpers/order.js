@@ -17,31 +17,48 @@ exports.placeOrder = (req, res) => {
         }
     })
         .then(order => {
+            const message = []
             req.body.products.forEach(item => {
-                productHelper.getProductCountAndReduce(item.quantity, item.productId._id, (result) => {
-                    if (result) {
-                        order.product.push(item)
-                        // TODO : parallel save is a problem need to use find & modify to update
-                        order.save()
-                            .then(order => {
-                                helpers.clearCart(req.body.shoppingCartId)
-                                db.Customer.findOne({ _id: req.body.customer_id }, "order")
-                                    .then(customer => {
-                                        customer.order.push(order)
-                                        customer.save()
-                                            .then(customer => res.send({ "SUCCESS": customer }))
-                                            .catch(error => console.log(error))
-                                    })
-                                    .catch(error => console.log(error))
-                            })
-                            .catch(error => console.log(error))
-                    }else{
-                        res.send({"FAILED": "Item not available"})
-                    }
-                })
+                productHelper.getProductCountAndReduce(
+                    item.quantity,
+                    item.productId._id,
+                    result => {
+                        if (result) {
+                            db.Order.findByIdAndUpdate(order._id,
+                                { $push: { product: item } },
+                                { safe: true, upsert: true },
+                                )
+                                .then(() => null)
+                                .catch(error => console.log("Error adding product to order document: ", error))
+                        } else {
+                            message.push(item.productId._id+" is out of stock") 
+                        }
+                    })
             })
+            helpers.clearCart(req.body.shoppingCartId)
+            db.Customer.findByIdAndUpdate(req.body.customer_id,
+                { $push: { order: order } },
+                { safe: true, upsert: true })
+                .then(customer => {
+                    if(message.length>0){
+                        res.send({
+                            "FAILED": "One or more items out of stock",
+                            "MESSAGE": message
+                        })
+                    }else{
+                        res.send({ 
+                            "SUCCESS": customer,
+                            "MESSAGE": "No Error" 
+                        })
+                    }
+                   
+                })
+                .catch(error => console.log("ERROR while pushing to customer document: ", error))
         })
-        .catch(error => res.send(error))
+        .catch(error => {
+            console.log(error)
+            res.send({ "ERROR": error })
+        })
 }
 
 exports.getOrders = (req, res) => {
@@ -56,5 +73,8 @@ exports.getOrders = (req, res) => {
         })
         .then(order => {
             res.send({ "SUCCESS": order })
+        })
+        .catch(error => {
+            console.log(error)
         })
 }

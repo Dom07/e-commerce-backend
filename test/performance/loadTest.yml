@@ -1,0 +1,47 @@
+config:
+  target: 'http://localhost:4000'
+  phases:
+    - duration: 20
+      arrivalRate: 10
+  payload:
+    path: "products.csv"
+    fields:
+      - "product_id"
+  variables:
+    customerId:
+      - "5e9d55c5011fd2ccb459ae18"
+      - "5e9d55c5011fd2ccb459ae19"
+      - "5e9d55c5011fd2ccb459ae1a"
+      - "5e9d55c5011fd2ccb459ae1b"
+      - "5e9d55c5011fd2ccb459ae1c"
+      - "5e9d55c5011fd2ccb459ae1d"
+      - "5e9d55c5011fd2ccb459ae1e"
+      - "5e9d55c5011fd2ccb459ae1f"
+      - "5e9d55c5011fd2ccb459ae20"
+      - "5e9d55c5011fd2ccb459ae21"
+
+scenarios:
+  - name: "Load a product based on Product Id"
+    flow:
+      - get:
+          url: "/api/product/{{product_id}}"
+
+  - name: "Load Orders based on Customer Id"
+    flow:
+      - get:
+          url: "/api/order/getOrders/{{ customerId }}"
+  
+  - name: "Load Featured Products"
+    flow:
+      - get:
+          url: "/api/product/getFeatured/Electronics"
+  
+  - name: "Load Shopping Cart based on Customer Id"
+    flow:
+      - get:
+          url: "/api/shoppingCart/view/{{ customerId }}"
+  
+  - name: "Load reviews based on product Id"
+    flow:
+      - get:
+          url: "/api/review/getReviews/{{ product_id }}"

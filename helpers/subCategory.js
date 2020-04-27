@@ -1,5 +1,7 @@
 const db = require('../models')
 
+/* istanbul ignore next */
+
 exports.addSubCategory = (req, res) => {
     db.Category.findOne({ name: req.body.category })
         .then(category => {
@@ -12,6 +14,8 @@ exports.addSubCategory = (req, res) => {
         .catch(error => console.log(error))
 }
 
+/* istanbul ignore next */
+
 exports.getSubCategories = (req, res) =>{
     db.SubCategory.find({})
         .then(subCategories => res.send({"SUCCESS": subCategories}))
@@ -20,6 +24,8 @@ exports.getSubCategories = (req, res) =>{
             res.send({"ERROR": true})
         })
 }
+
+/* istanbul ignore next */
 
 exports.getSubCategoryByName = (req, res) => {
     db.Category.findOne({name: req.params.category})
@@ -30,6 +36,8 @@ exports.getSubCategoryByName = (req, res) => {
     })
     .catch(error => res.send({"ERROR":error}))
 }
+
+/* istanbul ignore next */
 
 exports.deleteSubCategory = (req, res) => {
     db.SubCategory.findOneAndRemove({ _id: req.body.id })

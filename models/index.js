@@ -4,7 +4,8 @@ const mongoose = require('mongoose');
 mongoose.connect("mongodb://localhost:27017/eCommerce", 
     {
         useNewUrlParser: true, 
-        useUnifiedTopology: true
+        useUnifiedTopology: true,
+        useFindAndModify: false
     }, 
     error => error ? console.log(error): null);
 
@@ -18,5 +19,4 @@ module.exports.Product = require('./product')
 module.exports.Review = require('./review')
 module.exports.ShoppingCart = require('./shoppingCart')
 module.exports.User = require('./user')
-module.exports.WishList = require('./wishlist')
 module.exports.SubCategory = require('./subCategory')

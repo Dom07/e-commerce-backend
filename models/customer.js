@@ -9,7 +9,6 @@ const CustomerSchema = new mongoose.Schema({
         {type: mongoose.Schema.Types.ObjectId, ref: "PaymentDetails"}
     ],
     shoppingCart: {type: mongoose.Schema.Types.ObjectId, ref: "ShoppingCart"},
-    wishList: {type: mongoose.Schema.Types.ObjectId, ref: "WishList"},
     order: [
         {type: mongoose.Schema.Types.ObjectId, ref: "Order"}
     ]

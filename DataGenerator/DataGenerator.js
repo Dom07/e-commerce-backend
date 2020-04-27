@@ -2,7 +2,12 @@ const helper = require('./helper');
 const Laptops = require('./Laptops');
 const Mobiles = require('./Mobiles');
 const Users = require('./Users');
+const Jacket = require('./jacket')
+const Shoes = require('./shoes');
+const Books = require('./books');
+const Games = require('./games');
 const Axios = require('axios');
+
 
 const productUrl = "http://localhost:4000/api/product/add"
 const customerUrl = "http://localhost:4000/api/customer/addCustomer"
@@ -26,10 +31,37 @@ switch (process.argv[2]) {
         break;
     }
 
+    case "jacket":{
+        helper.loadData(productUrl, Jacket)
+        break;
+    }
+
+    case "shoes":{
+        helper.loadData(productUrl, Shoes)
+        break;
+    }
+
+    case "books":{
+        helper.loadData(productUrl, Books)
+        break;
+    }
+
+    case "games":{
+        helper.loadData(productUrl, Games)
+        break;
+    }
+
+    case "removeItemInSub":{
+        helper.removeSubCatItems(process.argv[3], () => {
+            console.log("Items in specified subCat removed")
+        })
+        break;
+    }
+
     case "addToCart": {
         helper.loadUsers(data => {
             let users = data
-            helper.loadProducts(data => {
+            helper.loadProducts(products => {
                 users.forEach(user => {
                     helper.addProductToCart(cartUrl, {
                         customer_id: user._id,
@@ -75,9 +107,16 @@ switch (process.argv[2]) {
         break;
     }
 
+    case "giveReview":{
+        helper.writeReview()
+        break;
+    }
+    case "removeAll":{
+        helper.removeAll()
+        break;
+    }
+
     default: {
         console.log(`Invalid input: ${process.argv[2]}`)
     }
 }
-
-

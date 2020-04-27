@@ -18,6 +18,8 @@ exports.viewCart = (req, res) => {
         .catch(error => res.send("ERROR"))
 }
 
+/* istanbul ignore next */
+
 exports.updateCart = (req, res) => {
     db.Customer.findOne({ _id: req.body.customer_id }, 'shoppingCart').populate('shoppingCart')
         .then(customer => {
@@ -47,10 +49,8 @@ exports.removeItemFromCart = (req, res) => {
             db.ShoppingCart.findOne({ _id: response.shoppingCart })
                 .then(cart => {
                     const index = cart.products.findIndex(item => {
-                        console.log(item.productId)
                         return item.productId == req.body.productId
                     })
-                    console.log(index)
                     if(index!=-1) cart.products.splice(index, 1)
                     cart.save()
                         .then(cart => res.send({"SUCCESS": cart.products}))

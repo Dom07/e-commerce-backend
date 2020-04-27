@@ -17,7 +17,7 @@ describe("Shopping Cart", () => {
         .catch(error => console.log(error))
     })
 
-    describe("PUT /api/shoppingCart/add", () => {
+    describe("#11 PUT /api/shoppingCart/add", () => {
         it("it should add product to cart", (done) => {
             let data = {
                 customer_id: customer_id,
@@ -34,7 +34,7 @@ describe("Shopping Cart", () => {
         });
     });
 
-    describe("GET /api/shoppingCart/view/:customer_id", () => {
+    describe("#12 GET /api/shoppingCart/view/:customer_id", () => {
         it("it should get all products in the cart", done => {
             chai.request(app)
             .get("/api/shoppingCart/view/"+customer_id)
@@ -49,7 +49,7 @@ describe("Shopping Cart", () => {
         })
     })
 
-    describe("PUT /api/shoppingCart/removeItem", () => {
+    describe("#13 PUT /api/shoppingCart/removeItem", () => {
         it("it should remove an item from the cart", done => {
             chai.request(app)
             .put("/api/shoppingCart/removeItem")
