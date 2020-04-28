@@ -1,8 +1,8 @@
 config:
   target: 'http://localhost:4000'
   phases:
-  - duration: 5
-    arrivalRate: 20
+  - duration: 20
+    arrivalRate: 10
   payload:
     -
       path: "user.csv"
